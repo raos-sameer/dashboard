@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import AppMenu from "./common/Appmenu";
 import Paper from "@material-ui/core/Paper";
 import {
   SortingState,
   IntegratedSorting,
   FilteringState,
+  SearchState,
   IntegratedFiltering,
   PagingState,
   IntegratedPaging,
@@ -11,6 +13,8 @@ import {
 import {
   Grid,
   Table,
+  Toolbar,
+  SearchPanel,
   TableHeaderRow,
   TableFilterRow,
   TableColumnResizing,
@@ -32,7 +36,7 @@ const App = () => {
 
   const [rows] = useState(generateRows({ length: 8 }));
   const [sorting, setSorting] = useState([
-    { columnName: "city", direction: "asc" },
+    { columnName: "requestId", direction: "asc" },
   ]);
   const status = ["Success", "In progress", "Failed"];
   const [columnWidths, setColumnWidths] = useState([
@@ -46,18 +50,14 @@ const App = () => {
   ]);
   const [filteringColumnExtensions] = useState([
     {
-      columnName: "timestamp",
+      columnName: "timestamps",
       predicate: (value, filter, row) => {
         console.log(value, filter, row);
-        if (!filter.value.length) return true;
-        if (filter && filter.operation === "month") {
-          const month = parseInt(value.split("-")[1], 10);
-          return month === parseInt(filter.value, 10);
-        }
-        return IntegratedFiltering.defaultPredicate(value, filter, row);
+        // filter date
       },
     },
   ]);
+  const [searchValue, setSearchState] = useState("");
   var entirePieData = rows.map((item) => item.requestIdStatus);
   var entireData = [];
   for (var i = 0; i < status.length; ++i) {
@@ -65,8 +65,9 @@ const App = () => {
   }
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Experiment with charts and grids</h1>
-      <div style={{ width: "1000px" }}>
+      <AppMenu></AppMenu>
+      <h1>Data Migration Dashboard</h1>
+      <div style={{ width: "70%" }}>
         <div
           style={{
             marginLeft: "260px",
@@ -81,14 +82,24 @@ const App = () => {
               labels: ["Success", "In Progress", "Failed"],
               datasets: [
                 {
-                  label: "Entire Status of Data Migration",
                   data: entireData,
                   backgroundColor: ["green", "orange", "red"],
                   borderWidth: 1,
                 },
               ],
             }}
-            options={{ maintainAspectRatio: false }}
+            options={{
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Status of Current Data Migration",
+                },
+              },
+            }}
           ></Pie>
           <Bar
             data={{
@@ -105,7 +116,7 @@ const App = () => {
                   label: "Domains -  remaining %",
                   data: [12, 19, 3, 5, 2, 3],
                   backgroundColor: [
-                    ,
+                    "blue",
                     "rgba(54, 162, 235, 0.2)",
                     "rgba(255, 206, 86, 0.2)",
                     "rgba(75, 192, 192, 0.2)",
@@ -117,28 +128,47 @@ const App = () => {
                 },
               ],
             }}
-            options={{ maintainAspectRatio: false }}
+            options={{
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
+                title: {
+                  display: true,
+                  text: "Status of Entire Data Migration",
+                },
+              },
+            }}
           ></Bar>
         </div>
       </div>
-      <Paper>
-        <Grid rows={rows} columns={columns}>
-          <SortingState sorting={sorting} onSortingChange={setSorting} />
-          <FilteringState defaultFilters={[]} />
-          <IntegratedFiltering columnExtensions={filteringColumnExtensions} />
-          <IntegratedSorting />
-          <PagingState defaultCurrentPage={0} pageSize={5} />
-          <IntegratedPaging />
-          <Table />
-          <TableColumnResizing
-            columnWidths={columnWidths}
-            onColumnWidthsChange={setColumnWidths}
-          />
-          <TableHeaderRow showSortingControls />
-          <TableFilterRow />
-          <PagingPanel />
-        </Grid>
-      </Paper>
+      <br />
+      <hr />
+      <div style={{ width: "90%" }}>
+        <h2>Current Data migration details</h2>
+        <Paper>
+          <Grid rows={rows} columns={columns}>
+            <SortingState sorting={sorting} onSortingChange={setSorting} />
+            <SearchState value={searchValue} onValueChange={setSearchState} />
+            <FilteringState defaultFilters={[]} />
+            <IntegratedFiltering columnExtensions={filteringColumnExtensions} />
+            <IntegratedSorting />
+            <PagingState defaultCurrentPage={0} pageSize={5} />
+            <IntegratedPaging />
+            <Table />
+            <TableColumnResizing
+              columnWidths={columnWidths}
+              onColumnWidthsChange={setColumnWidths}
+            />
+            <TableHeaderRow showSortingControls />
+            <Toolbar />
+            <SearchPanel />
+            <TableFilterRow />
+            <PagingPanel />
+          </Grid>
+        </Paper>
+      </div>
     </div>
   );
 };

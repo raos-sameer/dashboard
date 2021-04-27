@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import moment from "moment-timezone";
+export const downloadButtonOptions = (
+  <ButtonGroup
+    size="small"
+    color="primary"
+    aria-label="large outlined primary button group"
+  >
+    <Button>PDF</Button>
+    <Button>CSV</Button>
+    <Button>Text</Button>
+  </ButtonGroup>
+);
 export function generateRows() {
   const data = [
     {
@@ -10,7 +23,7 @@ export function generateRows() {
       requestIdStatus: "Failed",
       domainStatus: "50%",
       timestamp: moment("2021-04-10").format("lll"),
-      action: <button>Resume</button>,
+      action: <Button color="primary">Resume</Button>,
     },
     {
       requestId: "ABC123",
@@ -30,7 +43,7 @@ export function generateRows() {
       requestIdStatus: "Success",
       domainStatus: "26%",
       timestamp: moment("2021-01-10").format("lll"),
-      action: <button>Dowonload logs</button>,
+      action: downloadButtonOptions,
     },
     {
       requestId: "ABC123",
@@ -60,7 +73,7 @@ export function generateRows() {
       requestIdStatus: "Success",
       domainStatus: "66%",
       timestamp: moment("2021-04-10").format("lll"),
-      action: <button>Dowonload logs</button>,
+      action: downloadButtonOptions,
     },
     {
       requestId: "IJK442",
@@ -80,7 +93,7 @@ export function generateRows() {
       requestIdStatus: "Success",
       domainStatus: "55%",
       timestamp: moment("2016-01-01").format("lll"),
-      action: <button>Dowonload</button>,
+      action: downloadButtonOptions,
     },
   ];
 
