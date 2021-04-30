@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment-timezone";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Paper from "@material-ui/core/Paper";
 import {
   SortingState,
@@ -6,6 +9,8 @@ import {
   FilteringState,
   SearchState,
   IntegratedFiltering,
+  GroupingState,
+  IntegratedGrouping,
   PagingState,
   IntegratedPaging,
 } from "@devexpress/dx-react-grid";
@@ -16,6 +21,7 @@ import {
   SearchPanel,
   TableHeaderRow,
   TableFilterRow,
+  TableGroupRow,
   TableColumnResizing,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
@@ -28,7 +34,7 @@ const Dashboard = () => {
     { name: "customerId", title: "Customer Id" },
     { name: "activity", title: "Activity" },
     { name: "domain", title: "Domain" },
-    { name: "requestIdStatus", title: "Request Id Status" },
+    { name: "requestIdStatus", title: "Status" },
     { name: "timestamp", title: "Timestamp" },
     { name: "action", title: "Action" },
   ]);
@@ -56,6 +62,11 @@ const Dashboard = () => {
       },
     },
   ]);
+  const groupItems = [
+    {
+      columnName: "requestId",
+    },
+  ];
   const [searchValue, setSearchState] = useState("");
   var entirePieData = rows.map((item) => item.requestIdStatus);
   var entireData = [];
@@ -64,7 +75,17 @@ const Dashboard = () => {
   }
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Data Migration Dashboard</h1>
+      <h1>Customer Data Migration</h1>
+      <ButtonGroup
+        style={{ marginLeft: "60%", textAlign: "right" }}
+        size="small"
+        color="primary"
+        aria-label="large outlined primary button group"
+      >
+        <Button>Refresh</Button>
+        <Button>Active Monitors</Button>
+        <Button>Deactivate Monitors</Button>
+      </ButtonGroup>
       <div style={{ width: "70%" }}>
         <div
           style={{
@@ -96,14 +117,18 @@ const Dashboard = () => {
                   },
                   title: {
                     display: true,
-                    text: "Status of Current Data Migration",
+                    text:
+                      "Status of " +
+                      moment().startOf("day").format("lll") +
+                      " to " +
+                      moment().endOf("day").format("lll"),
                   },
                 },
               }}
             ></Pie>
           </div>
 
-          <Bar
+          {/* <Bar
             data={{
               labels: [
                 "Identity",
@@ -115,16 +140,9 @@ const Dashboard = () => {
               ],
               datasets: [
                 {
-                  label: "Domains -  remaining %",
+                  label: "# records migrated (in multiples of 1000)",
                   data: [12, 19, 3, 5, 2, 3],
-                  backgroundColor: [
-                    "blue",
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba(255, 206, 86, 0.2)",
-                    "rgba(75, 192, 192, 0.2)",
-                    "rgba(153, 102, 255, 0.2)",
-                    "rgba(255, 159, 64, 0.2)",
-                  ],
+                  backgroundColor: "rgba(54, 162, 235, 0.2)",
                   borderColor: "blue",
                   borderWidth: 1,
                 },
@@ -142,13 +160,13 @@ const Dashboard = () => {
                 },
               },
             }}
-          ></Bar>
+          ></Bar> */}
         </div>
       </div>
       <br />
       <hr />
       <div style={{ width: "90%" }}>
-        <h2>Current Data migration details</h2>
+        <h2>CSTS Data migration details - {moment().format("ll")}</h2>
         <Paper>
           <Grid rows={rows} columns={columns}>
             <SortingState sorting={sorting} onSortingChange={setSorting} />
@@ -156,6 +174,8 @@ const Dashboard = () => {
             <FilteringState defaultFilters={[]} />
             <IntegratedFiltering columnExtensions={filteringColumnExtensions} />
             <IntegratedSorting />
+            <GroupingState grouping={groupItems} />
+            <IntegratedGrouping />
             <PagingState defaultCurrentPage={0} pageSize={5} />
             <IntegratedPaging />
             <Table />
@@ -164,6 +184,7 @@ const Dashboard = () => {
               onColumnWidthsChange={setColumnWidths}
             />
             <TableHeaderRow showSortingControls />
+            <TableGroupRow />
             <Toolbar />
             <SearchPanel />
             <TableFilterRow />
@@ -171,6 +192,14 @@ const Dashboard = () => {
           </Grid>
         </Paper>
       </div>
+      <ButtonGroup
+        style={{ marginTop: "3%", textAlign: "right" }}
+        size="small"
+        color="primary"
+        aria-label="large outlined primary button group"
+      >
+        <Button>Download Report</Button>
+      </ButtonGroup>
     </div>
   );
 };

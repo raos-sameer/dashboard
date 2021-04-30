@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -17,6 +17,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Dashboard from "../Dashboard";
+import Report from "../Report";
+import QuickView from "../QuickView";
 
 const drawerWidth = 240;
 
@@ -58,9 +60,11 @@ function Appmenu(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [showDashboard, setShowDashboard] = useState(true);
+  const [showQuickView, setShowQuickView] = useState(false);
+  const [showReport, setShowReport] = useState(false);
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileOpen(true);
   };
 
   const drawer = (
@@ -68,12 +72,31 @@ function Appmenu(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {["Report", "Send email", "Drafts"].map((text, index) => (
+        {["Report", "Quick View", "Home"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemText
+              primary={text}
+              onClick={() => {
+                if (text === "Report") {
+                  setShowReport(true);
+                  setShowDashboard(false);
+                  setShowQuickView(false);
+                }
+                if (text === "Quick View") {
+                  setShowReport(false);
+                  setShowDashboard(false);
+                  setShowQuickView(true);
+                }
+                if (text === "Home") {
+                  setShowReport(false);
+                  setShowDashboard(true);
+                  setShowQuickView(false);
+                }
+              }}
+            />
           </ListItem>
         ))}
       </List>
@@ -137,7 +160,9 @@ function Appmenu(props) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Typography paragraph>
-          <Dashboard></Dashboard>
+          {showDashboard && <Dashboard></Dashboard>}
+          {showReport && <Report></Report>}
+          {showQuickView && <QuickView></QuickView>}
         </Typography>
       </main>
     </div>
