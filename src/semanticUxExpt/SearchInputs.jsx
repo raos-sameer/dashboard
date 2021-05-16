@@ -76,7 +76,7 @@ export default function SearchInputs() {
                 <Form.Field
                   control={Select}
                   label="Domain"
-                  options={statusOptions}
+                  options={domainOptions}
                   placeholder="None"
                   multiple
                 />

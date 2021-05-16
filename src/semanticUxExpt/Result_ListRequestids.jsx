@@ -27,6 +27,9 @@ const Level1Content = (
     <Button color="orange" size="small">
       Customer Id: XYZ789
     </Button>
+    <Button style={{ marginTop: "1%" }} color="orange" size="small">
+      Customer Id: XYZ901
+    </Button>
   </div>
 );
 

@@ -96,15 +96,22 @@ export default function Page1() {
             width: "90%",
           }}
         >
-          <Grid columns={10} padded>
-            <Grid.Column floated="right" color={"green"}>
+          <Grid columns={15} padded>
+            <Grid.Column
+              floated="right"
+              color={"green"}
+              textAlign="center"
+              style={{ borderRadius: "50%" }}
+            >
               {" "}
-              Completed{" "}
+              Complete{" "}
             </Grid.Column>
             <Grid.Column
               floated="right"
+              textAlign="center"
               style={{
                 marginLeft: "3%",
+                borderRadius: "50%",
               }}
               color={"orange"}
             >
@@ -112,8 +119,10 @@ export default function Page1() {
             </Grid.Column>
             <Grid.Column
               floated="right"
+              textAlign="center"
               style={{
                 marginLeft: "3%",
+                borderRadius: "50%",
               }}
               color={"red"}
             >
@@ -153,7 +162,7 @@ export default function Page1() {
         </Header>
 
         <Grid columns="equal" style={{ marginLeft: "2%", width: "90%" }}>
-          <Grid.Row style={{ width: "90%" }}>
+          <Grid.Row>
             <Grid.Column>
               <Table color={"blue"} sortable celled fixed>
                 <Result></Result>
